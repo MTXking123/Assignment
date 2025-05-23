@@ -1,19 +1,12 @@
 
 import { BsBookmark, BsEmojiSmile } from 'react-icons/bs';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import EmojiPicker from 'emoji-picker-react';
 
 export default function ChatDashboard({ messages, input, setInput, sendMessage, bookmarked, toggleBookmark, activeIndex }) {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const current = messages[activeIndex];
 
@@ -23,19 +16,8 @@ export default function ChatDashboard({ messages, input, setInput, sendMessage, 
   };
 
   return (
-    <main className="flex flex-col h-full justify-between relative dark:bg-gray-900 dark:text-white">
-      {mounted && (
-        <div className="absolute top-4 right-4 z-50">
-          <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full transition duration-300"
-          >
-            {theme === 'dark' ? '🌞' : '🌙'}
-          </button>
-        </div>
-      )}
-
-      <div className="p-6 space-y-4 overflow-y-auto">
+    <main className="flex flex-col h-full justify-between relative bg-white text-black w-full">
+      <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
         {messages.filter((_, i) => i === activeIndex).map((msg, i) => (
           <div key={i} className="space-y-2">
             <div className="bg-indigo-300 text-black p-3 rounded-md w-fit max-w-[75%]">
@@ -48,32 +30,36 @@ export default function ChatDashboard({ messages, input, setInput, sendMessage, 
         ))}
       </div>
 
-      <div className="border-t  border-gray-200 dark:border-gray-700 p-4 relative">
-        <div className="flex items-center space-x-2 ">
-          <button
-            className="text-xl text-gray-600 dark:text-gray-300"
-            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-          >
-            <BsEmojiSmile />
-          </button>
-          <button
-            className="text-xl text-gray-600 dark:text-gray-300"
-            onClick={() => toggleBookmark(activeIndex)}
-          >
-            <BsBookmark />
-          </button>
+      <div className="border-t border-gray-200 p-3 sm:p-4 relative w-full">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-2 sm:space-y-0">
+          <div className="flex items-center space-x-2">
+            <button
+              className="text-xl text-gray-600"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <BsEmojiSmile />
+            </button>
+            <button
+              className="text-xl text-gray-600"
+              onClick={() => toggleBookmark(activeIndex)}
+            >
+              <BsBookmark />
+            </button>
+          </div>
+
           {showEmojiPicker && (
             <div className="absolute bottom-16 left-4 z-50">
-              <EmojiPicker theme={theme} onEmojiClick={onEmojiClick} />
+              <EmojiPicker onEmojiClick={onEmojiClick} />
             </div>
           )}
+
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none bg-white dark:bg-gray-800 text-black dark:text-white"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none bg-white text-black"
           />
-          <button onClick={sendMessage} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+          <button onClick={sendMessage} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 w-full sm:w-auto">
             Send
           </button>
         </div>
